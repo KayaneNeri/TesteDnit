@@ -2,22 +2,18 @@
 require 'conexao.php';
 session_start();
 
-// Verifica se há pelo menos um administrador no sistema
 $stmt = $pdo->query('SELECT COUNT(*) FROM admins');
 $temAdmin = $stmt->fetchColumn() > 0;
 
-// Verifica se o usuário está autenticado (somente se já existir administrador)
 if ($temAdmin && !isset($_SESSION['admin_id'])) {
     header('Location: login.php');
     exit;
 }
 
-// Processa o formulário de cadastro de administradores
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT); // Criptografa a senha
 
-    // Verifica se o email já existe
     $stmt = $pdo->prepare('SELECT * FROM admins WHERE email = ?');
     $stmt->execute([$email]);
     $adminExistente = $stmt->fetch();
@@ -25,11 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($adminExistente) {
         $erro = "Este email já está cadastrado.";
     } else {
-        // Insere o novo administrador no banco
         $stmt = $pdo->prepare('INSERT INTO admins (email, senha) VALUES (?, ?)');
         if ($stmt->execute([$email, $senha])) {
             $sucesso = "Administrador cadastrado com sucesso!";
-            header('Location: cadastro_admins.php?success=1'); // Evita reenvio de formulário
+            header('Location: cadastro_admins.php?success=1'); 
             exit;
         } else {
             $erro = "Erro ao cadastrar administrador. Tente novamente.";
@@ -45,14 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Cadastro de Administradores</title>
     <link rel="stylesheet" href="style.css">
     <style>
-    /* Reset básico */
+    
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilo geral do body */
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradiente diagonal */
@@ -65,7 +59,6 @@ body {
     overflow: hidden;
 }
 
-/* Cabeçalho */
 h1 {
     font-size: 2rem;
     color: #fff;
@@ -74,7 +67,7 @@ h1 {
     text-align: center;
 }
 
-/* Formulário */
+
 form {
     background-color: #ffffff;
     padding: 30px 40px;
@@ -85,7 +78,7 @@ form {
     animation: fadeIn 1s ease-in-out; /* Animação de fade-in */
 }
 
-/* Estilo para labels */
+
 form label {
     display: block;
     margin-bottom: 8px;
@@ -93,7 +86,6 @@ form label {
     color: #6a11cb;
 }
 
-/* Estilo para os campos de entrada */
 form input {
     width: 100%;
     padding: 12px;
@@ -110,7 +102,7 @@ form input:focus {
     box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
 }
 
-/* Botão */
+
 form button {
     width: 100%;
     padding: 12px;
@@ -127,8 +119,6 @@ form button:hover {
     background: linear-gradient(90deg, #2575fc, #6a11cb);
     transform: translateY(-2px);
 }
-
-/* Mensagens de feedback */
 p {
     margin-top: 10px;
     text-align: center;
@@ -143,7 +133,6 @@ p[style="color: red;"] {
     color: #e74c3c;
 }
 
-/* Link para Login */
 a {
     display: inline-block;
     margin-top: 20px;
@@ -157,7 +146,6 @@ a:hover {
     color: #45a049;
 }
 
-/* Animação de Fade-in */
 @keyframes fadeIn {
     from {
         opacity: 0;
