@@ -1,7 +1,5 @@
 <?php
 require 'conexao.php';
-
-// Adicionar curso
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
     $nome = $_POST['nome'];
     $area = $_POST['area'];
@@ -11,8 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
     header('Location: cursos.php');
     exit;
 }
-
-// Editar curso
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar'])) {
     $id = $_POST['id'];
     $nome = $_POST['nome'];
@@ -23,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar'])) {
     header('Location: cursos.php');
     exit;
 }
-
-// Excluir curso
 if (isset($_GET['excluir'])) {
     $id = $_GET['excluir'];
 
@@ -34,7 +28,6 @@ if (isset($_GET['excluir'])) {
     exit;
 }
 
-// Listar cursos
 $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -44,14 +37,11 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
     <title>Gerenciar Cursos</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Reset básico */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        /* Estilo geral do body com gradiente */
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradiente diagonal */
@@ -64,16 +54,12 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
             overflow: hidden;
             padding: 20px;
         }
-
-        /* Cabeçalho */
         h1 {
             color: #fff;
             font-size: 2rem;
             margin-bottom: 20px;
             text-align: center;
         }
-
-        /* Formulário de adicionar curso */
         form {
             display: flex;
             gap: 15px;
@@ -112,8 +98,6 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
             background: linear-gradient(90deg, #2575fc, #6a11cb);
             transform: translateY(-2px);
         }
-
-        /* Tabela de cursos */
         table {
             width: 90%;
             margin: 20px auto;
@@ -135,8 +119,6 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-
-        /* Estilo do botão de excluir */
         a.delete-btn {
             color: red;
             text-decoration: none;
@@ -147,8 +129,6 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
         a.delete-btn:hover {
             color: #d9534f;
         }
-
-        /* Formulário de edição de curso */
         form.edit-form {
             display: flex;
             gap: 10px;
@@ -174,8 +154,6 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
         form.edit-form button:hover {
             background-color: #2575fc;
         }
-
-        /* Animação de fade-in */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -190,16 +168,12 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <h1>Gerenciar Cursos</h1>
-
-    <!-- Formulário para adicionar um novo curso -->
     <form method="POST">
         <input type="hidden" name="adicionar" value="1">
         <input type="text" name="nome" placeholder="Nome do Curso" required>
         <input type="text" name="area" placeholder="Área" required>
         <button type="submit">Adicionar Curso</button>
     </form>
-
-    <!-- Tabela de cursos -->
     <table>
         <tr>
             <th>ID</th>
@@ -213,14 +187,12 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= $curso['nome'] ?></td>
                 <td><?= $curso['area'] ?></td>
                 <td>
-                    <!-- Formulário de edição -->
                     <form method="POST" class="edit-form" style="display: inline;">
                         <input type="hidden" name="id" value="<?= $curso['id'] ?>">
                         <input type="text" name="nome" value="<?= $curso['nome'] ?>" required>
                         <input type="text" name="area" value="<?= $curso['area'] ?>" required>
                         <button type="submit" name="editar">Salvar</button>
                     </form>
-                    <!-- Link para excluir -->
                     <a href="?excluir=<?= $curso['id'] ?>" class="delete-btn" onclick="return confirm('Deseja realmente excluir este curso?')">Excluir</a>
                 </td>
             </tr>
