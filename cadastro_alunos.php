@@ -1,26 +1,21 @@
 <?php
 require 'conexao.php';
 
-// Buscar cursos disponíveis
 $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
 
-// Processa o formulário de cadastro
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $dataNascimento = $_POST['data_nascimento'];
-    $cursoIds = $_POST['curso_id'];  // Múltiplos cursos selecionados
+    $cursoIds = $_POST['curso_id'];  
 
-    // Inicia a transação
     $pdo->beginTransaction();
 
     try {
-        // Insere o aluno no banco
         $stmt = $pdo->prepare('INSERT INTO alunos (nome, email, data_nascimento) VALUES (?, ?, ?)');
         $stmt->execute([$nome, $email, $dataNascimento]);
-        $alunoId = $pdo->lastInsertId(); // Pega o ID do aluno recém-cadastrado
+        $alunoId = $pdo->lastInsertId(); 
 
-        // Insere as matrículas no banco
         if ($cursoIds) {
             foreach ($cursoIds as $cursoId) {
                 $stmt = $pdo->prepare('INSERT INTO matriculas (aluno_id, curso_id) VALUES (?, ?)');
@@ -28,12 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             }
         }
 
-        // Confirma a transação
         $pdo->commit();
 
         echo "Aluno cadastrado e matriculado com sucesso!";
     } catch (Exception $e) {
-        // Reverte a transação em caso de erro
         $pdo->rollBack();
         echo "Erro: " . $e->getMessage();
     }
@@ -47,14 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
     <title>Cadastro de Alunos e Matrícula</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Reset básico */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        /* Estilo geral do body com gradiente */
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradiente diagonal */
@@ -66,15 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             min-height: 100vh;
             overflow: hidden;
         }
-
-        /* Cabeçalho */
         h1 {
             color: #fff;
             font-size: 2rem;
             margin-bottom: 20px;
         }
-
-        /* Estilo do formulário */
         form {
             background-color: #fff;
             padding: 30px 40px;
@@ -84,8 +70,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
             animation: fadeIn 1s ease-in-out;
         }
-
-        /* Labels */
         label {
             display: block;
             margin-top: 10px;
@@ -93,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             color: #6a11cb;
         }
 
-        /* Inputs */
         input[type="text"], input[type="email"], input[type="date"] {
             width: 100%;
             padding: 12px;
@@ -110,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
         }
 
-        /* Checkbox dos cursos */
         .courses-checkboxes {
             display: flex;
             flex-wrap: wrap;
@@ -130,8 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
         .courses-checkboxes input[type="checkbox"] {
             margin-right: 8px;
         }
-
-        /* Botão de cadastro */
         button {
             padding: 12px 20px;
             background: linear-gradient(90deg, #6a11cb, #2575fc);
@@ -147,8 +127,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             background: linear-gradient(90deg, #2575fc, #6a11cb);
             transform: translateY(-2px);
         }
-
-        /* Botões para adicionar curso e gerenciamento */
         .add-course-btn, .management-btn {
             display: inline-block;
             margin-top: 20px;
@@ -173,8 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
         .management-btn:hover {
             background-color: #007B9E;
         }
-
-        /* Animação de Fade-in */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -189,8 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
 </head>
 <body>
     <h1>Cadastrar Aluno e Matricular em Cursos</h1>
-
-    <!-- Formulário de cadastro de aluno -->
     <form method="POST">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" placeholder="Nome do Aluno" required>
@@ -213,8 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
 
         <button type="submit" name="cadastrar">Cadastrar e Matricular</button>
     </form>
-
-    <!-- Botões de navegação -->
     <a href="cursos.php" class="add-course-btn">Adicionar Curso</a>
     <a href="gerenciamento_alunos.php" class="management-btn">Gerenciamento de Alunos</a>
 </body>
