@@ -33,14 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     <title>Buscar Alunos</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Reset básico */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Estilo geral do body com gradiente */
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradiente diagonal */
@@ -54,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             padding: 20px;
         }
 
-        /* Cabeçalho */
         h1 {
             color: #fff;
             font-size: 2rem;
@@ -62,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             text-align: center;
         }
 
-        /* Formulário de busca */
         form {
             display: flex;
             justify-content: center;
@@ -102,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             transform: translateY(-2px);
         }
 
-        /* Tabela de alunos */
         table {
             width: 90%;
             margin: 20px auto;
@@ -125,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             background-color: #f9f9f9;
         }
 
-        /* Botão flutuante para adicionar aluno */
         a.add-aluno {
             position: fixed;
             bottom: 20px;
@@ -145,7 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             transform: scale(1.1);
         }
 
-        /* Animação de fade-in */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -162,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     <h1>Buscar Alunos</h1>
 
-    <!-- Formulário de busca -->
     <form method="GET">
         <input type="text" name="nome" placeholder="Nome">
         <input type="email" name="email" placeholder="Email">
@@ -170,7 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <button type="submit">Buscar</button>
     </form>
 
-    <!-- Tabela de alunos -->
     <table>
         <tr>
             <th>ID</th>
@@ -185,7 +177,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 <td><?= $aluno['email'] ?></td>
                 <td>
                     <?php 
-                    // Exibindo as matérias associadas ao aluno
                     $materias = [];
                     $stmt = $pdo->prepare('SELECT c.area FROM cursos c 
                                            LEFT JOIN matriculas m ON c.id = m.curso_id 
@@ -202,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <?php endforeach; ?>
     </table>
 
-    <!-- Botão para adicionar aluno -->
     <a href="cadastro_alunos.php" class="add-aluno">+</a>
 
 </body>
