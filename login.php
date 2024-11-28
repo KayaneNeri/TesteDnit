@@ -1,22 +1,18 @@
 <?php
 session_start();
-require 'conexao.php'; // Certifique-se de que o caminho para 'db.php' está correto
+require 'conexao.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Verifica se o PDO foi configurado corretamente
     if (!isset($pdo)) {
         die("Erro: Conexão com o banco de dados não foi estabelecida.");
     }
-
-    // Busca o administrador pelo email
     $stmt = $pdo->prepare('SELECT * FROM admins WHERE email = ?');
     $stmt->execute([$email]);
     $admin = $stmt->fetch();
 
-    // Verifica credenciais
     if ($admin && password_verify($password, $admin['senha'])) {
         $_SESSION['admin_id'] = $admin['id'];
         header('Location: cadastro_alunos.php');
@@ -33,14 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-/* Reset básico */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilo geral do body */
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradiente diagonal */
@@ -51,8 +46,6 @@ body {
     height: 100vh;
     overflow: hidden;
 }
-
-/* Formulário */
 form {
     background: #ffffff;
     padding: 30px 40px;
@@ -63,15 +56,11 @@ form {
     text-align: center;
     animation: fadeIn 1s ease-in-out; /* Animação sutil */
 }
-
-/* Título */
 form h2 {
     font-size: 1.8rem;
     color: #6a11cb;
     margin-bottom: 20px;
 }
-
-/* Campos de entrada */
 form input {
     width: 100%;
     padding: 12px;
@@ -87,8 +76,6 @@ form input:focus {
     border-color: #6a11cb;
     box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
 }
-
-/* Botão */
 form button {
     width: 100%;
     padding: 12px;
@@ -105,15 +92,12 @@ form button:hover {
     background: linear-gradient(90deg, #2575fc, #6a11cb);
     transform: translateY(-2px);
 }
-
-/* Mensagem de erro */
 form p {
     color: #e74c3c;
     font-size: 0.9rem;
     margin-top: 10px;
 }
 
-/* Animação de Fade-in */
 @keyframes fadeIn {
     from {
         opacity: 0;
