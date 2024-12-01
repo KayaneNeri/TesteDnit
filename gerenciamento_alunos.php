@@ -1,6 +1,26 @@
 <?php
 require 'conexao.php';
 
+if (isset($_GET['excluir'])) {
+    $id = $_GET['excluir'];
+    $stmt = $pdo->prepare('DELETE FROM alunos WHERE id = ?');
+    $stmt->execute([$id]);
+    header('Location: gerenciamento_alunos.php');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar'])) {
+    $id = $_POST['id'];
+    $nome = $_POST['nome'];
+    $email = $_POST['email'];
+    $data_nascimento = $_POST['data_nascimento'];
+
+    $stmt = $pdo->prepare('UPDATE alunos SET nome = ?, email = ?, data_nascimento = ? WHERE id = ?');
+    $stmt->execute([$nome, $email, $data_nascimento, $id]);
+    header('Location: gerenciamento_alunos.php');
+    exit;
+}
+
 $alunos = [];
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $query = 'SELECT DISTINCT a.* FROM alunos a 
@@ -26,14 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $alunos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Buscar Alunos</title>
+    <title>Gerenciar Alunos</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        
         * {
             margin: 0;
             padding: 0;
@@ -68,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             animation: fadeIn 1s ease-in-out;
         }
 
-        input[type="text"], input[type="email"] {
+        input[type="text"], input[type="email"], input[type="date"] {
             padding: 12px;
             font-size: 14px;
             border: 1px solid #ccc;
@@ -78,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             transition: border-color 0.3s ease;
         }
 
-        input[type="text"]:focus, input[type="email"]:focus {
+        input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus {
             border-color: #6a11cb;
             box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
         }
@@ -140,6 +160,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             transform: scale(1.1);
         }
 
+        .delete-btn {
+            color: #ff4d4d;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            color: #d93636;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -153,8 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     </style>
 </head>
 <body>
-
-    <h1>Buscar Alunos</h1>
+    <h1>Gerenciar Alunos</h1>
 
     <form method="GET">
         <input type="text" name="nome" placeholder="Nome">
@@ -169,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             <th>Nome</th>
             <th>Email</th>
             <th>Matéria</th>
+            <th>Ações</th>
         </tr>
         <?php foreach ($alunos as $aluno): ?>
             <tr>
@@ -189,12 +220,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     echo implode(', ', $materias);
                     ?>
                 </td>
+                <td>
+                    <form method="POST" action="gerenciamento_alunos.php" style="display:inline;">
+                        <input type="hidden" name="id" value="<?= $aluno['id'] ?>">
+                        <input type="text" name="nome" value="<?= $aluno['nome'] ?>" required>
+                        <input type="email" name="email" value="<?= $aluno['email'] ?>" required>
+                        <input type="date" name="data_nascimento" value="<?= $aluno['data_nascimento'] ?>" required>
+                        <button type="submit" name="editar">Salvar</button>
+                    </form>
+                    <a href="?excluir=<?= $aluno['id'] ?>" class="delete-btn" onclick="return confirm('Deseja realmente excluir este aluno?')">Excluir</a>
+                </td>
             </tr>
         <?php endforeach; ?>
     </table>
 
     <a href="cadastro_alunos.php" class="add-aluno">+</a>
-
 </body>
 </html>
-

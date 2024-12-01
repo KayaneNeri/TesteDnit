@@ -1,12 +1,6 @@
 CREATE SCHEMA dnit;
 USE dnit;
 drop database dnit;
-CREATE TABLE admins (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL
-);
-
 
 CREATE TABLE alunos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,7 +11,7 @@ CREATE TABLE alunos (
 
 CREATE TABLE cursos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL
+    area VARCHAR(255) NOT NULL -- Alterado para incluir apenas "area"
 );
 
 CREATE TABLE matriculas (
@@ -27,6 +21,16 @@ CREATE TABLE matriculas (
     FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
     FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
 );
+
+ CREATE TABLE admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE admins CHANGE username email VARCHAR(255) UNIQUE NOT NULL;
+ALTER TABLE admins CHANGE password senha VARCHAR(255) NOT NULL;
+
 
 SELECT * FROM alunos;
 SELECT * FROM cursos;

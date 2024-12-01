@@ -1,21 +1,21 @@
 <?php
 require 'conexao.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adicionar'])) {
-    $nome = $_POST['nome'];
+
     $area = $_POST['area'];
 
-    $stmt = $pdo->prepare('INSERT INTO cursos (nome, area) VALUES (?, ?)');
-    $stmt->execute([$nome, $area]);
+    $stmt = $pdo->prepare('INSERT INTO cursos (area) VALUES ( ?)');
+    $stmt->execute([$area]);
     header('Location: cursos.php');
     exit;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar'])) {
     $id = $_POST['id'];
-    $nome = $_POST['nome'];
+
     $area = $_POST['area'];
 
     $stmt = $pdo->prepare('UPDATE cursos SET nome = ?, area = ? WHERE id = ?');
-    $stmt->execute([$nome, $area, $id]);
+    $stmt->execute([$area, $id]);
     header('Location: cursos.php');
     exit;
 }
@@ -44,7 +44,7 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
         }
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradiente diagonal */
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
             color: #333;
             display: flex;
             flex-direction: column;
@@ -170,34 +170,28 @@ $cursos = $pdo->query('SELECT * FROM cursos')->fetchAll(PDO::FETCH_ASSOC);
     <h1>Gerenciar Cursos</h1>
     <form method="POST">
         <input type="hidden" name="adicionar" value="1">
-        <input type="text" name="nome" placeholder="Nome do Curso" required>
         <input type="text" name="area" placeholder="Área" required>
         <button type="submit">Adicionar Curso</button>
     </form>
     <table>
         <tr>
             <th>ID</th>
-            <th>Nome</th>
             <th>Área</th>
             <th>Ações</th>
         </tr>
         <?php foreach ($cursos as $curso): ?>
             <tr>
                 <td><?= $curso['id'] ?></td>
-                <td><?= $curso['nome'] ?></td>
                 <td><?= $curso['area'] ?></td>
                 <td>
                     <form method="POST" class="edit-form" style="display: inline;">
                         <input type="hidden" name="id" value="<?= $curso['id'] ?>">
-                        <input type="text" name="nome" value="<?= $curso['nome'] ?>" required>
                         <input type="text" name="area" value="<?= $curso['area'] ?>" required>
-                        <button type="submit" name="editar">Salvar</button>
                     </form>
                     <a href="?excluir=<?= $curso['id'] ?>" class="delete-btn" onclick="return confirm('Deseja realmente excluir este curso?')">Excluir</a>
                 </td>
             </tr>
         <?php endforeach; ?>
     </table>
-
 </body>
 </html>

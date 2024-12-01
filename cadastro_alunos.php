@@ -180,12 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cadastrar'])) {
             <?php foreach ($cursos as $curso): ?>
                 <label>
                     <input type="checkbox" name="curso_id[]" value="<?= $curso['id'] ?>">
-                    <?= htmlspecialchars($curso['nome']) ?>
+                    <?= htmlspecialchars($curso['area']) ?>
                 </label>
             <?php endforeach; ?>
         </div>
-
+                    <center>
         <button type="submit" name="cadastrar">Cadastrar e Matricular</button>
+                    </center>
     </form>
     <a href="cursos.php" class="add-course-btn">Adicionar Curso</a>
     <a href="gerenciamento_alunos.php" class="management-btn">Gerenciamento de Alunos</a>
